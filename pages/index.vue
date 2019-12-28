@@ -11,7 +11,7 @@
             :key="index">
                 <div class="banner-image" 
                 :style="`
-                background:url(${item.url}) center center no-repeat;
+                background:url(${$axios.defaults.baseURL+item.url}) center center no-repeat;
                 background-size:contain contain;
                 `">
                 </div>
@@ -24,12 +24,18 @@
 export default {
 	data(){
 		return {
-			banners: [
-				{ url: "http://157.122.54.189:9095/assets/images/th01.jfif" },
-				{ url: "http://157.122.54.189:9095/assets/images/th02.jfif" }
-			]
+			banners: []
 		}
-	}
+    },
+    mounted(){
+        this.$axios({
+            url: "/scenics/banners"
+        }).then(res=>{
+            // data是轮播图的数组
+			const {data} = res.data;
+			this.banners = data;
+		})   
+    }
 };
 </script>
 
