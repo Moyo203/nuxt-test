@@ -74,6 +74,7 @@ export default {
                     data: this.form
                 }).then(res => {
                     console.log(res.data);
+                    this.$store.commit("user/setUserInfo",res.data)
                 })   
                   }
 

@@ -17,8 +17,6 @@
                 </div>
             </el-carousel-item>
         </el-carousel>
-          <el-button type="primary" @click="hhh(username)">主要按钮</el-button>
-
     </div>
 </template>
 
@@ -27,7 +25,6 @@ export default {
 	data(){
 		return {
             banners: [],
-            username:'嘻嘻嘻'
 		}
     },
     mounted(){
@@ -38,11 +35,6 @@ export default {
 			const {data} = res.data;
 			this.banners = data;
 		})   
-    },
-    methods:{
-        hhh(){
-            this.$store.commit('user/setName',this.username)
-        }
     }
 };
 </script>
