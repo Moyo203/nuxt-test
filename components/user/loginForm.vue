@@ -67,20 +67,13 @@ export default {
         // 提交登录
         handleLoginSubmit(){
               this.$refs['form'].validate((valid) => {
-                  if(valid){
-                   this.$axios({
-                    url: "/accounts/login",
-                    method: "POST",
-                    data: this.form
-                }).then(res => {
-                    console.log(res.data);
-                    this.$store.commit("user/setUserInfo",res.data)
-                })   
-                  }
-
-              })
-        //    console.log(this.form)
-        }
+                  if(!valid) return;
+                  this.$store.dispatch('user/login',this.form).then(res=>{
+                      if(res === true){
+                          this.$message.success('登录成功')
+                      }
+                  })
+              })}
     }
 }
 </script>

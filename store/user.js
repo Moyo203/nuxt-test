@@ -13,4 +13,18 @@ export const mutations = {
     }
 };
 
-export const actions = {};
+export const actions = {
+    login(store,data){
+        // console.log(store)
+        return this.$axios({
+            url: "/accounts/login",
+            method: "POST",
+            data
+        }).then(res => {
+            // console.log(res.data);
+            this.$router.back()
+            store.commit("setUserInfo",res.data)
+            return true
+        })   
+    }
+};
