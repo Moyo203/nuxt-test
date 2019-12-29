@@ -24,6 +24,7 @@
                 <nuxt-link to="/user/login" class="account-link">
                     登录 / 注册 
                 </nuxt-link>
+                <div>{{$store.state.user.name}}</div>
             </el-row>
         </el-row>
     </header>
