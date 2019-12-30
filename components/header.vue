@@ -27,7 +27,7 @@
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>个人中心</el-dropdown-item>
-            <el-dropdown-item>退出</el-dropdown-item>          
+            <el-dropdown-item @click.native="headleback">退出</el-dropdown-item>          
           </el-dropdown-menu>
         </el-dropdown>
 
@@ -38,7 +38,13 @@
   </header>
 </template>
 <script>
-export default {}
+export default {
+  methods:{
+    headleback(){
+      this.$store.commit('user/setUserInfo',{})
+    }
+  }
+}
 </script>
 <style scoped lang="less">
 .header {
