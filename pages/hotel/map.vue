@@ -2,7 +2,7 @@
   <div style="padding:100px">
     <script
       type="text/javascript"
-      src="https://webapi.amap.com/maps?v=1.4.15&key=55ee7ba22ce81ba55495bfaea11a6c3e&plugin=AMap.Driving,AMap.Transfer,AMap.Walking"
+      src="https://webapi.amap.com/maps?v=1.4.15&key=55ee7ba22ce81ba55495bfaea11a6c3e&plugin=AMap.Driving,AMap.Transfer,AMap.Walking,AMap.Autocomplete"
     ></script>
     <!-- 地图的容器 -->
     <el-row>
@@ -19,10 +19,10 @@
           >{{item}}</span>
           <el-form>
             <el-form-item>
-              <el-input placeholder="起点位置" v-model="start"></el-input>
+              <el-autocomplete placeholder="起点位置" v-model="start" :fetch-suggestions="handlekeyword"></el-autocomplete>
             </el-form-item>
             <el-form-item>
-              <el-input placeholder="终点位置" v-model="end"></el-input>
+              <el-autocomplete placeholder="终点位置" v-model="end" :fetch-suggestions="handlekeyword"></el-autocomplete>
             </el-form-item>
             <el-form-item>
               <el-button @click="handleSearch">搜索</el-button>
@@ -32,6 +32,10 @@
               <div>时间：{{ routes[0].time }}</div>
               <div>高速费：{{ routes[0].tolls }}元</div>
               <div>高速的距离：{{ Number(routes[0].tolls_distance / 1000).toFixed(1) }}公里</div>
+            </el-form-item>
+              <el-form-item v-if="routes[0] && current === 2">
+              <div>距离：{{ Number(routes[0].distance / 1000).toFixed(1) }}公里</div>
+              <div>时间：{{ routes[0].time }}</div>
             </el-form-item>
           </el-form>
         </div>
@@ -104,6 +108,51 @@ export default {
           }
         })
       }
+       if (this.current == 2) {
+        this.walking.search(points, (status, result) => {
+          // 未出错时，result即是对应的路线规划方案
+          if (status === 'complete') {
+            this.routes = result.routes
+                // 得到分钟
+            const time = this.routes[0].time / 60
+            let hours, min, day
+            if (time >= 60) {
+              hours = Math.floor(time / 60)
+              min = time % 60
+              this.routes[0].time = `${hours}小时${Number(min).toFixed(2)}分钟`
+            }
+
+            if (hours >= 24) {
+              day = Math.floor(hours / 24)
+              hours = hours % 24
+              this.routes[0].time = `${day}天${hours}小时${Number(min).toFixed(
+                2
+              )}分钟`
+            }
+
+            if (time < 60) {
+              this.routes[0].time = `${Number(time).toFixed(2)}分钟`
+            }     
+          }
+        })
+      }
+    },
+    handlekeyword(value,callback){
+      if(!value){
+        callback([]);
+        return
+      }
+         var autoComplete= new AMap.Autocomplete({ city: '全国' });
+            autoComplete.search(value, function(status, result) {
+                // 搜索成功时，result即是对应的匹配数据
+                const data = result.tips.map(v => {
+                    v.value = v.name;
+                    return v;
+                })
+
+                // 回调函数的参数必须是一个数组，数组的元素必须是一个对象，对象里面必须有value属性
+                callback(data)
+            })
     }
   },
   mounted() {
