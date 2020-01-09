@@ -17,7 +17,7 @@
         <span>{{item.cityName}}</span>
         by
         <img src="http://157.122.54.189:9095/assets/images/avatar.jpg" alt />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{item.account.nickname}}
         <i class="el-icon-view"></i>
         {{item.watch}}
         <span class="like">{{item.like || 0}} &nbsp;&nbsp;赞</span>
@@ -52,7 +52,7 @@ export default {
           if (item.cityName.indexOf(city) != -1) {              
               this.cityname.push(data[index])
               this.postList = this.cityname
-            console.log(this.postList)
+            // console.log(this.postList)
           }
         })
       })
@@ -67,7 +67,7 @@ export default {
       }).then(res => {
         const { data } = res.data
         this.postList = data
-        console.log(this.postList)
+        // console.log(this.postList)
       })
     }
   }
