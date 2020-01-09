@@ -11,7 +11,7 @@
           </ul>
 
           <ul v-for="(item,index) in titleList" :key="index" class="title" v-show="currentTab === index">
-             <li v-for="(item2,index2) in item.children" :key="index2"><a href=""><span>{{index2+1}}{{item2.city}}</span>{{item2.desc}}</a></li>    
+             <li v-for="(item2,index2) in item.children" :key="index2"><nuxt-link :to="`/post?city=${item2.city}`"><span>{{index2+1}}{{item2.city}}</span>{{item2.desc}}</nuxt-link></li>    
             </ul>
       </div>
           <span>推荐城市</span>
@@ -35,7 +35,7 @@
           <h4>推荐攻略</h4>
           <el-button class="btn1" type="primary" icon="el-icon-edit">写游记</el-button>
           <hr>
-          <PostArticle/>       
+          <PostArticle :data='titleList'/>       
         </div>
      
   </div>
@@ -54,12 +54,14 @@ export default {
     PostArticle
   },
   mounted () {
+    const {departCity} = this.$route.query;
     this.$axios({
       url:'/posts/cities',
+      params:{departCity},
     }).then(res=>{
       const {data} =res.data;
       this.titleList = data;
-      // console.log(this.titleList)
+      console.log(res)
     })
   },
   methods:{
@@ -68,6 +70,9 @@ export default {
     },
     xxx(){
       this.currentTab = 111
+    },
+    kkk(index2){
+      
     }
   }
 }
