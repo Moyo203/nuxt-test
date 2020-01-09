@@ -1,8 +1,8 @@
 import {Message} from "element-ui";
 // 错误拦截
-export default function({$axios, redirect}){
-    $axios.onError(err => {
-        const {statusCode, message} = err.response.data;
+export default function(nuxt){
+    nuxt.$axios.onError(res => {
+        const {statusCode, message} = res.response.data;
         
         // 还未使用
         // if(statusCode === 401 || statusCode === 403){
@@ -12,6 +12,10 @@ export default function({$axios, redirect}){
 
         if(statusCode === 400){
             Message.warning({message});
+        }
+        if(statusCode === 401){
+            Message.error('登录过期，将跳转到登录页')
+            nuxt.redirect(200,"/user/login")
         }
     })
 }
