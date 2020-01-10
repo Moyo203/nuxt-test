@@ -30,7 +30,7 @@
 
     <div class="right">
       <div class="search">
-        <input type="text" placeholder="输入想去的地方  例如广州" :value="cityname"  id="incity"/>
+        <input type="text" placeholder="输入想去的地方  例如广州" :value="cityname" id="incity" />
         <i class="el-icon-search" @click="citySearch"></i>
       </div>
       <div class="search-recommend">
@@ -38,12 +38,26 @@
         <nuxt-link :to="`/post?city=广州`">广州</nuxt-link>
         <nuxt-link :to="`/post?city=上海`">上海</nuxt-link>
         <nuxt-link :to="`/post?city=北京`">北京</nuxt-link>
-     
       </div>
       <h4>推荐攻略</h4>
       <el-button class="btn1" type="primary" icon="el-icon-edit">写游记</el-button>
       <hr />
-      <PostArticle />
+      <PostArticle v-for="(item,index) in postList" :key="index" :data='item' />
+
+      <!-- 分页组件 -->
+      <!-- size-change: 切换条数时候触发事件
+                current-change: 切换你页数时候触发的事件
+                current-page: 当然显示的页面
+      total: 总条数-->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pageIndex"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+      ></el-pagination>
     </div>
   </div>
 </template>
@@ -55,7 +69,15 @@ export default {
     return {
       currentTab: 999,
       titleList: [],
-      cityname:'',
+      postList: [],
+      cityna: [],
+      cityname: '',
+      // 当前的页面
+      pageIndex: 1,
+      // 当然的条数
+      pageSize: 5,
+      // 总条数
+      total: 0,
     }
   },
   components: {
@@ -67,13 +89,30 @@ export default {
     }).then(res => {
       const { data } = res.data
       this.titleList = data
-      console.log(res)
-    })
+
+      console.log(this.titleList)
+    }),
+    this.mmm()
   },
   watch: {
     $route() {
-      const { city } = this.$route.query
+      const { city } = this.$route.query 
       this.cityname = city
+        this.$axios({
+        url: '/posts',
+        parmas: { city }
+      }).then(res => {     
+        const { data } = res.data
+        this.postList = data
+        this.cityna.length = 0
+        this.postList.forEach((item, index) => {
+          if (item.cityName.indexOf(city) != -1) {              
+              this.cityna.push(data[index])
+              this.postList = this.cityna
+            // console.log(this.postList)
+          }
+        })
+      })
     }
   },
   methods: {
@@ -83,16 +122,44 @@ export default {
     xxx() {
       this.currentTab = 111
     },
-    citySearch(){
-      var cname = document.querySelector("#incity").value
-      this.cityname= cname
+    citySearch() {
+      var cname = document.querySelector('#incity').value
+      this.cityname = cname
       this.$router.push({
-        path:'/post',
-        query:{
-          city:this.cityname
+        path: '/post',
+        query: {
+          city: this.cityname
         }
       })
-    //  console.log(this.cityname)
+      //  console.log(this.cityname)
+    },
+    //渲染子组件数据
+    mmm() {
+      const { city } = this.$route.query
+      this.$axios({
+        url: '/posts',
+        parmas: { city }
+      }).then(res => {
+        const { data } = res.data
+        this.postList = data
+        this.total = this.postList.length
+        // console.log( this.total)
+        // console.log(this.postList)
+      })
+    },
+    // 切换分页条数时候触发
+    handleSizeChange(value) {
+      this.pageSize = value
+      // this.flightList = this.flightsData.flights.slice(
+      //     (this.pageIndex - 1) * this.pageSize,this.pageIndex * this.pageSize
+      //     )
+    },
+    // 切换页数时候触发的事件
+    handleCurrentChange(value) {
+      this.pageIndex = value
+      // this.flightList = this.flightsData.flights.slice(
+      //     (this.pageIndex - 1) * this.pageSize,this.pageIndex * this.pageSize
+      //     )
     }
   }
 }

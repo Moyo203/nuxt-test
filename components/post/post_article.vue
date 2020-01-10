@@ -1,26 +1,26 @@
 <template>
   <div>
-    <div v-for="(item,index) in postList" :key="index">
+    <div>
       <h4 class="post-title">
-        <a href>{{item.title}}</a>
+        <a href>{{data.title}}</a>
       </h4>
       <p class="post-desc">
-        <a v-html="item.content">{{item.content}}</a>
+        <a v-html="data.content">{{data.content}}</a>
       </p>
       <div class="pic">
-        <a href="#" v-for="(item2,index2) in item.images" :key="index2">
+        <a href="#" v-for="(item2,index2) in data.images" :key="index2">
           <img :src="item2" />
         </a>
       </div>
       <div class="message">
         <i class="el-icon-location-outline"></i>
-        <span>{{item.cityName}}</span>
+        <span>{{data.cityName}}</span>
         by
         <img src="http://157.122.54.189:9095/assets/images/avatar.jpg" alt />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{item.account.nickname}}
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{data.account.nickname}}
         <i class="el-icon-view"></i>
-        {{item.watch}}
-        <span class="like">{{item.like || 0}} &nbsp;&nbsp;赞</span>
+        {{data.watch}}
+        <span class="like">{{data.like || 0}} &nbsp;&nbsp;赞</span>
       </div>
     </div>
   </div>
@@ -30,47 +30,19 @@
 export default {
   data() {
     return {
-      postList: [],
-      cityname: []
+    
+     
     }
   },
-  mounted() {
-    this.mmm()
-  },
-  watch: {
-    $route() {
-      const { city } = this.$route.query
-      this.$axios({
-        url: '/posts',
-        parmas: { city }
-      }).then(res => {
-        // console.log(city)
-        const { data } = res.data
-        this.postList = data
-        this.cityname.length = 0
-        this.postList.forEach((item, index) => {
-          if (item.cityName.indexOf(city) != -1) {              
-              this.cityname.push(data[index])
-              this.postList = this.cityname
-            // console.log(this.postList)
-          }
-        })
-      })
-    }
-  },
-  methods: {
-    mmm() {
-      const { city } = this.$route.query
-      this.$axios({
-        url: '/posts',
-        parmas: { city }
-      }).then(res => {
-        const { data } = res.data
-        this.postList = data
-        // console.log(this.postList)
-      })
-    }
-  }
+     props: {
+        // 数据
+        data: {
+            type: Object,
+            // 默认是空数组
+            default(){ return{}}
+        }
+    },
+
 }
 </script>
 

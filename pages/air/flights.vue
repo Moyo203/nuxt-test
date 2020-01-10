@@ -106,10 +106,11 @@ export default {
             params: this.$route.query
         }).then(res => {
             // 赋值给总数据，但是该变量中的flights在过滤时候会被修改
-            console.log(res)
+            // console.log(res)
            this.flightsData = res.data
            this.cacheFlightsData = {...res.data}
             this.total = this.flightsData.total;
+            console.log(this.flightsData)
             // 切割第一页
         //    this.flightList = this.flightsData.flights.slice(0,5)
          
