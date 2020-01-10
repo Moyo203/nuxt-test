@@ -1,48 +1,60 @@
 <template>
   <div>
-    <div>
+    <div @click="cccc(data.id)">
       <h4 class="post-title">
-        <a href>{{data.title}}</a>
+        <a>{{data.title}}</a>
       </h4>
       <p class="post-desc">
         <a v-html="data.content">{{data.content}}</a>
       </p>
       <div class="pic">
-        <a href="#" v-for="(item2,index2) in data.images" :key="index2">
+        <a  v-for="(item2,index2) in data.images" :key="index2">
           <img :src="item2" />
         </a>
       </div>
-      <div class="message">
-        <i class="el-icon-location-outline"></i>
-        <span>{{data.cityName}}</span>
-        by
-        <img src="http://157.122.54.189:9095/assets/images/avatar.jpg" alt />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{data.account.nickname}}
-        <i class="el-icon-view"></i>
-        {{data.watch}}
-        <span class="like">{{data.like || 0}} &nbsp;&nbsp;赞</span>
-      </div>
+    </div>
+    <div class="message">
+      <i class="el-icon-location-outline"></i>
+      <span>{{data.cityName}}</span>
+      by
+      <img src="http://157.122.54.189:9095/assets/images/avatar.jpg" alt />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{data.account.nickname}}
+      <i
+        class="el-icon-view"
+      ></i>
+      {{data.watch}}
+      <span class="like">{{data.like || 0}} &nbsp;&nbsp;赞</span>
     </div>
   </div>
 </template>
 
 <script>
+
 export default {
   data() {
-    return {
-    
-     
+    return {}
+  },
+ 
+  props: {
+    // 数据
+    data: {
+      type: Object,
+      // 默认是空数组
+      default() {
+        return {}
+      }
     }
   },
-     props: {
-        // 数据
-        data: {
-            type: Object,
-            // 默认是空数组
-            default(){ return{}}
+  methods:{
+    cccc(id){
+      this.$router.push({
+        path:'/post/detail',
+        query:{
+          id
         }
-    },
-
+      })
+    }
+  }
 }
 </script>
 

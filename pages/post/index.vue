@@ -42,7 +42,7 @@
       <h4>推荐攻略</h4>
       <el-button class="btn1" type="primary" icon="el-icon-edit">写游记</el-button>
       <hr />
-      <PostArticle v-for="(item,index) in postList" :key="index" :data='item' />
+      <PostArticle v-for="(item,index) in ppppList" :key="index" :data='item' />
 
       <!-- 分页组件 -->
       <!-- size-change: 切换条数时候触发事件
@@ -53,7 +53,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="pageIndex"
-        :page-sizes="[5, 10, 15, 20]"
+        :page-sizes="[2, 4, 6, 8]"
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
@@ -68,9 +68,12 @@ export default {
   data() {
     return {
       currentTab: 999,
+      // 主组件标题数据
       titleList: [],
+      // 子组件的数据
       postList: [],
-      cityna: [],
+      // 创建一个新数组存放城市名
+      ctName: [],
       cityname: '',
       // 当前的页面
       pageIndex: 1,
@@ -83,13 +86,19 @@ export default {
   components: {
     PostArticle
   },
+  computed:{
+    ppppList(){
+      if(!this.postList)return[];
+      return  this.postList = this.postList.slice(
+          (this.pageIndex - 1) * this.pageSize,this.pageIndex * this.pageSize);
+    }
+  },
   mounted() {
     this.$axios({
       url: '/posts/cities'
     }).then(res => {
       const { data } = res.data
       this.titleList = data
-
       console.log(this.titleList)
     }),
     this.mmm()
@@ -103,12 +112,14 @@ export default {
         parmas: { city }
       }).then(res => {     
         const { data } = res.data
-        this.postList = data
-        this.cityna.length = 0
+        this.postList = data 
+        this.ctName.length = 0
         this.postList.forEach((item, index) => {
           if (item.cityName.indexOf(city) != -1) {              
-              this.cityna.push(data[index])
-              this.postList = this.cityna
+              this.ctName.push(data[index])
+              this.postList = this.ctName     
+              this.total = this.postList.length
+               this.pageIndex = 1
             // console.log(this.postList)
           }
         })
@@ -142,7 +153,7 @@ export default {
       }).then(res => {
         const { data } = res.data
         this.postList = data
-        this.total = this.postList.length
+       this.total = this.postList.length
         // console.log( this.total)
         // console.log(this.postList)
       })
@@ -150,14 +161,14 @@ export default {
     // 切换分页条数时候触发
     handleSizeChange(value) {
       this.pageSize = value
-      // this.flightList = this.flightsData.flights.slice(
+      // this.postList = this.postList.slice(
       //     (this.pageIndex - 1) * this.pageSize,this.pageIndex * this.pageSize
       //     )
     },
     // 切换页数时候触发的事件
     handleCurrentChange(value) {
       this.pageIndex = value
-      // this.flightList = this.flightsData.flights.slice(
+      // this.postList = this.postList.slice(
       //     (this.pageIndex - 1) * this.pageSize,this.pageIndex * this.pageSize
       //     )
     }
