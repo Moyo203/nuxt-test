@@ -155,7 +155,7 @@ export default {
         this.postList = data
        this.total = this.postList.length
         // console.log( this.total)
-        // console.log(this.postList)
+        console.log(this.postList)
       })
     },
     // 切换分页条数时候触发

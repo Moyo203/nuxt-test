@@ -10,24 +10,13 @@
         <h1>{{dataList.title}}</h1>
         <hr color="#dddddd" />
         <p class="gl">攻略：{{dataList.created_at|formatDate}}阅读：{{dataList.watch}}</p>
-        <p class="textContent">
-            <a v-html="dataList.content">{{dataList.content}}</a>
-        </p>
-        <img
-          src="https://n3-q.mafengwo.net/s10/M00/E8/E4/wKgBZ1octoCABhgLAAafahORRLs91.jpeg?imageView2%2F2%2Fw%2F1360%2Fq%2F90"
-          alt
-        />
-        <p class="tu">图：塞班岛。 by第5季旅游</p>
-        <p>
-          一、怎样用6000块玩转塞班？
-          大多数出境游客人不做预算或最终花费远远超出预算，对预算的合理分配对控制我们旅行的花费就很重要了，如何只花6000块玩转塞班岛，对预算超支say no？下面从5个方面来为您一一解读：机票+酒店、岛上交通、玩乐项目、吃以及购买纪念品。
-          1.怎样订机票+酒店性价比最高？
-          机票和酒店的花销往往会占据我们旅行大半的花销，假设机票酒店为塞班行预算的一半，剩下的吃行玩购为预算的另一半，如果能在机票酒店这部分省下钱，也就意味着在塞班岛用来吃行玩购的钱就增加了
-        </p>
+        <!-- 文章渲染 -->
+        <p class="textContent" v-html="dataList.content"></p>
+     
         <div class="four_icon">
           <div class="ctrl-item">
             <i class="el-icon-edit-outline"></i>
-            <p>评论(100)</p>
+            <p>评论({{leng}})</p>
           </div>
           <div class="ctrl-item">
             <i class="el-icon-star-off"></i>
@@ -39,7 +28,7 @@
           </div>
           <div class="ctrl-item">
             <i class="el-icon-success"></i>
-            <p>点赞(100)</p>
+            <p>点赞({{dataList.like}})</p>
           </div>
         </div>
         <div class="comment">
@@ -69,7 +58,8 @@ export default {
   data() {
     return {
       textarea: '',
-      dataList:[]
+      dataList:[],
+      leng:0
     }
   },
   props: {
@@ -96,6 +86,7 @@ export default {
       }
     }).then(res=>{
     this.dataList =res.data
+    this.leng = res.data.comments.length
       console.log(this.dataList)
     })
   },
@@ -113,6 +104,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
 .left {
   .mianbao {
     margin: 20px 0 30px 0;
@@ -125,7 +117,7 @@ export default {
     padding: 20px;
     text-align: right;
   }
-  img {
+  /deep/img {
     max-width: 700px !important;
     margin: 10px 0;
   }
@@ -154,12 +146,8 @@ export default {
     }
   }
   .textContent {
-  margin-bottom: 15px;
-  line-height: 1.5;
   font-size: 14px;
-  height: 63px;
-  overflow: hidden;
-  -webkit-line-clamp: 3;
+
   a {
     color: #666;
   }
